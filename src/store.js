@@ -7,9 +7,9 @@ export const store = new Vuex.Store({
     state:{
         isLoggedIn: false
     },
-    getters:{
-        getLoginState(state){
-            return state.isLoggedIn;
+    mutations:{
+        changeState(state, value){
+            state.isLoggedIn = value;
         }
     }
 });

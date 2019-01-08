@@ -44,20 +44,18 @@ export default {
   },
   computed:{
     getAuthState(){
-      return this.$store.getters.getLoginState;
+      return this.$store.state.isLoggedIn;
     }
   },
   methods:{
     onSubmit(){
       if(this.username != "" && this.password != "") {
-          
           this.$http.post('http://localhost:3000/login',{
               emailId:this.username,
               password:this.password
             }).then(response =>{
                 if(response.body.flag){
-                  //this.$emit("authenticated", true);
-                  this.$store.state.isLoggedIn = true;
+                  this.$store.commit('changeState',true);
                 }
             }, error =>{
                 alert(error.body.message); 

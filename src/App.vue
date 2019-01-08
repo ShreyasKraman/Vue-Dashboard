@@ -20,7 +20,7 @@ export default {
   },
   computed:{
     authenticated(){
-      return this.$store.getters.getLoginState;
+      return this.$store.state.isLoggedIn;
     }
   }
 }

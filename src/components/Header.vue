@@ -18,14 +18,14 @@
 <script>
 export default {
     name: 'Header',
-    data(){
-        return{
-            authenticated : this.$store.getters.getLoginState
+    computed:{
+        authenticated(){
+            return this.$store.state.isLoggedIn;
         }
     },
     methods:{
         logout(){
-            this.$store.getters.getLoginState = false;
+            this.$store.commit('changeState',false);
         }
     }
 }
