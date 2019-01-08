@@ -50,19 +50,22 @@ export default {
   methods:{
     onSubmit(){
       if(this.username != "" && this.password != "") {
+          
+          //Authenticating user
           this.$http.post('http://localhost:3000/login',{
               emailId:this.username,
               password:this.password
             }).then(response =>{
+                //Flag value set from server. Can return a token too!
                 if(response.body.flag){
                   this.$store.commit('changeState',true);
                 }
             }, error =>{
-                alert(error.body.message); 
+                swal("oops",error.body.message,"error"); 
             });
 
       } else {
-          alert("A username and password must be present");
+          swal("oops","Both username and password are mandatory","error");
       }
     }
   }
