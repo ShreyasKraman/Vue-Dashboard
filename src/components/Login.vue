@@ -1,32 +1,39 @@
 <template>
   <div class="container-fluid mt-5">
-     <div clas="row">
+     <div clas="row"> 
        <div class="col-md-6 mx-auto">
         <div class="card"> 
           <div class="card-header">
-            <h2 class="text-center text-info">Login</h2>
+            <h2 class="text-center card-title">Login</h2>
           </div> 
-          <form class="card-body" @submit.prevent="onSubmit">
-            <div class="form-group">
-              <label for="emailAddress">Email Address</label>
-              <input 
-                type="email" 
-                id="emailAddress" 
-                class="form-control" 
-                placeholder="Enter Email"
-                v-model="username">
-            </div>
-            <div class="form-group">
-              <label for="passwordEnter">Email Address</label>
-              <input 
-                type="password" 
-                id="passwordEnter" 
-                class="form-control" 
-                placeholder="Enter Password"
-                v-model="password">
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-          </form>
+          <div class="card-body">
+            <form @submit.prevent="onSubmit">
+              <div class="form-group">
+                <label for="emailAddress">Email Address</label>
+                <input 
+                  type="email" 
+                  id="emailAddress" 
+                  class="form-control" 
+                  placeholder="Enter Email"
+                  v-model="username">
+              </div>
+              <div class="form-group">
+                <label for="passwordEnter">Email Address</label>
+                <input 
+                  type="password" 
+                  id="passwordEnter" 
+                  class="form-control" 
+                  placeholder="Enter Password"
+                  v-model="password">
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+          </div>
+          <div class="card-footer">
+            <p class="text-muted text-center ">Not a member yet? 
+              <router-link :to="{path: '/register'}">Register here</router-link>
+            </p>
+          </div>
         </div>
        </div>
      </div>
@@ -34,6 +41,8 @@
 </template>
 
 <script>
+import swal from 'sweetalert';
+
 export default {
   name: 'login',
   data(){
@@ -50,7 +59,6 @@ export default {
   methods:{
     onSubmit(){
       if(this.username != "" && this.password != "") {
-          
           //Authenticating user
           this.$http.post('http://localhost:3000/login',{
               emailId:this.username,
@@ -59,6 +67,7 @@ export default {
                 //Flag value set from server. Can return a token too!
                 if(response.body.flag){
                   this.$store.commit('changeState',true);
+                  this.$router.push({path: '/dashboard'});
                 }
             }, error =>{
                 swal("oops",error.body.message,"error"); 

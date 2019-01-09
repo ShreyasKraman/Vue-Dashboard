@@ -7,21 +7,25 @@ import { store } from './store';
 
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import swal from 'sweetalert';
 
 Vue.config.productionTip = false
 
 Vue.use(VueResource);
 
-// Vue.http.interceptors.cors = function(request) {
-
-//   request.method = 'POST';
-//   request.headers.set('Access-Control-Allow-Origin', '*');
-// };
+//router guard to restrict url navigation for not loggedin users
+router.beforeEach((to,from,next) => {
+    if(!store.state.isLoggedIn && to.path === '/register' ){
+      next();
+    }  
+    else if(!store.state.isLoggedIn && to.path !== '/' ){
+      next('/'); 
+    }else{
+      next();
+    }
+})
 
 new Vue({
   router,
   store,
-  swal,
   render: h => h(App),
 }).$mount('#app')

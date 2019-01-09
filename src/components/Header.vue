@@ -26,6 +26,7 @@ export default {
     methods:{
         logout(){
             this.$store.commit('changeState',false);
+            this.$router.push({path:'/'});
         }
     }
 }
@@ -33,5 +34,7 @@ export default {
 </script>
 
 <style>
-
+    a.nav-link{
+        cursor: pointer;
+    }
 </style>
