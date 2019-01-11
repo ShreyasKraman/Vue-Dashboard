@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h2 class="text-center">Dashboard</h2>
+        <h2 name="dashboard-header" class="text-center">Dashboard</h2>
     </div>
 </template>
 

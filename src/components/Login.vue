@@ -26,7 +26,7 @@
                   placeholder="Enter Password"
                   v-model="password">
               </div>
-              <button type="submit" class="btn btn-primary btn-block">Login</button>
+              <button type="submit" name="login" class="btn btn-primary btn-block">Login</button>
             </form>
           </div>
           <div class="card-footer">
@@ -60,9 +60,15 @@ export default {
     onSubmit(){
       if(this.username != "" && this.password != "") {
           //Authenticating user
-          this.$http.post('http://localhost:3000/login',{
-              emailId:this.username,
-              password:this.password
+          this.$http.get('http://localhost:3000/login',
+            {
+              params: {
+                username: this.username,
+                password: this.password
+              },
+              headers: {
+                'content-type': 'application/json'
+              }
             }).then(response =>{
                 //Flag value set from server. Can return a token too!
                 if(response.body.flag){

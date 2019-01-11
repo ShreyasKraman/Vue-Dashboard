@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test": "mocha-webpack -w --webpack-config webpack.config.js --require test/setup.js test/**/*.spec.js",
+    "watch": "webpack -w -d"
   },
   "dependencies": {
     "bootstrap": "^4.2.1",
@@ -25,14 +27,19 @@
     "@vue/test-utils": "^1.0.0-beta.28",
     "babel-eslint": "^10.0.1",
     "babel-plugin-istanbul": "^5.1.0",
+    "css-loader": "^2.1.0",
     "eslint-plugin-vue": "^5.1.0",
     "expect": "^23.6.0",
     "jsdom": "^13.1.0",
     "jsdom-global": "^3.0.2",
     "mocha": "^5.2.0",
-    "mocha-webpack": "^1.1.0",
+    "mocha-webpack": "^2.0.0-beta.0",
     "nyc": "^13.1.0",
+    "style-loader": "^0.23.1",
+    "vue-loader": "^15.5.1",
     "vue-template-compiler": "^2.5.17",
+    "webpack": "^4.28.1",
+    "webpack-cli": "^3.2.1",
     "webpack-node-externals": "^1.7.2"
   },
   "eslintConfig": {

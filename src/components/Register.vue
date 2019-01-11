@@ -24,7 +24,7 @@
                                     id="phone" 
                                     class="form-control"
                                     placeholder="Eg: 9876543210"
-                                    v-model="phone" required>
+                                    v-model="mobile" required>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email Address</label>
@@ -33,7 +33,7 @@
                                     id="email" 
                                     class="form-control"
                                     placeholder="Eg: phood@example.com"
-                                    v-model="email" required>
+                                    v-model="username" required>
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
@@ -76,8 +76,8 @@ export default {
     data(){
         return{
             name:'',
-            phone:'',
-            email:'',
+            mobile:'',
+            username:'',
             password:'',
             confirm_password:''
         }
@@ -88,8 +88,8 @@ export default {
                 //Registering user
                 this.$http.post('http://localhost:3000/register',{
                     name:this.name,
-                    phone:this.phone,
-                    emailId:this.username,
+                    mobile:this.mobile,
+                    email:this.username,
                     password:this.password
                 }).then(response =>{
                         //Flag value set from server. Can return a token too!
