@@ -51,33 +51,30 @@ export default {
       password:''
     }
   },
+  created:{
+    
+  },
   computed:{
     getAuthState(){
       return this.$store.state.isLoggedIn;
     }
   },
   methods:{
-    onSubmit(){
+    async onSubmit(){
       if(this.username != "" && this.password != "") {
-          //Authenticating user
-          this.$http.get('http://localhost:3000/login',
-            {
-              params: {
-                username: this.username,
-                password: this.password
-              },
-              headers: {
-                'content-type': 'application/json'
+          try{    
+              var params = { username: this.username,password: this.password};
+              var headers = { 'content-type': 'application/json' };
+              var response = await this.$http.get('http://localhost:3000/login',{params,headers});
+              var result = await response.json();
+              if(result.flag){
+                this.$store.commit('changeState',true);
+                this.$router.push({path: '/dashboard'});
               }
-            }).then(response =>{
-                //Flag value set from server. Can return a token too!
-                if(response.body.flag){
-                  this.$store.commit('changeState',true);
-                  this.$router.push({path: '/dashboard'});
-                }
-            }, error =>{
-                swal("oops",error.body.message,"error"); 
-            });
+          }catch(err){
+            swal("oops",err.body.message,"error"); 
+          }
+
 
       } else {
           swal("oops","Both username and password are mandatory","error");

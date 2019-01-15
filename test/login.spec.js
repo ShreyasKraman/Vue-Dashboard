@@ -1,6 +1,5 @@
 import { mount } from '@vue/test-utils';
 import login from '../src/components/Login.vue';
-import dashboard from '../src/components/Dashboard.vue';
 
 const wrapper = mount(login);
 

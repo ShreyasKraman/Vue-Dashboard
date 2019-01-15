@@ -83,27 +83,26 @@ export default {
         }
     },
     methods:{
-         onSubmit(){
+         async onSubmit(){
             if(this.password === this.confirm_password) {
-                //Registering user
-                this.$http.post('http://localhost:3000/register',{
+                var auth = {
                     name:this.name,
                     mobile:this.mobile,
                     email:this.username,
                     password:this.password
-                }).then(response =>{
-                        //Flag value set from server. Can return a token too!
-                        if(response.body.flag){
-                        
+                };
+                
+                try{
+                    var response = await this.$http.post('http://localhost:3000/register',auth);
+                    if(response.body.flag){
                         swal("Account created!",
                             "User Id:"+response.body.UserID+" (for reference purpose only)",
                             "success");
-
                         this.$router.push({path: '/'});
-                        }
-                    }, error =>{
-                        swal("oops",error.body.message,"error"); 
-                    });
+                    }
+                }catch(error){
+                    swal("oops",error.body.message,"error"); 
+                }
 
             } else {
                 swal("oops","Password and confirm password should match","error");
