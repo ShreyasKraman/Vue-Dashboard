@@ -5,11 +5,15 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
     state:{
-        isLoggedIn: false
+        isLoggedIn: false,
+        roles: {}
     },
     mutations:{
         changeState(state, value){
             state.isLoggedIn = value;
+        },
+        addRoles(state, role){
+            state.roles = role;
         }
     }
 });

@@ -6,7 +6,25 @@
 
 <script>
 export default {
-    name:'dashboard'
+    name:'dashboard',
+    data(){
+        return{
+            roles: this.$store.state.roles
+        }
+    },
+    beforeCreate: function(){
+        if(!this.$session.exists()){
+            this.$store.commit('changeState',false);
+            this.$router.push({path:'/'});
+        }
+    },
+    methods:{
+        getMenuItems(){
+
+            
+
+        }
+    }
 }
 </script>
 
