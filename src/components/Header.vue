@@ -12,24 +12,26 @@
 			<li class="nav-item"><a class="nav-link">About Us</a></li>
 		</ul>
         <span class="navbar-item" v-if="authenticated">
-            <a class="nav-link" @click="logout()">Logout</a>
+            <a class="nav-link" @click="signout()">Logout</a>
         </span>
     </nav>   
 </template>
 
 <script>
+
+import { mapActions } from 'vuex';
+
 export default {
     name: 'Header',
     computed:{
         authenticated(){
-            return this.$store.state.isLoggedIn;
+            return this.$store.state.account.isLoggedIn;
         }
     },
     methods:{
-        logout(){
-            this.$session.destroy();
-            this.$store.commit('changeState',false);
-            this.$router.push({path:'/'});
+        ...mapActions('account', ['logout']),
+        signout(){
+            this.logout({router:this.$router});
         }
     }
 }

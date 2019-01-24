@@ -44,6 +44,8 @@
 <script>
 import swal from 'sweetalert';
 import { required } from 'vuelidate/lib/validators';
+import { mapActions } from 'vuex';
+
 
 export default {
   name: 'login',
@@ -66,15 +68,10 @@ export default {
     }
   },
   beforeCreate:function(){
-    if(this.$session.exists()){
-      this.$store.commit('changeState',true);
-      this.$router.push({path:'/dashboard'});
-    }
-  },
-  computed:{
-    getAuthState(){
-      return this.$store.state.isLoggedIn;
-    }
+    // if(this.$session.exists()){
+    //   this.$store.signIn.commit('change_logged_in',true);
+    //   this.$router.push({path:'/dashboard'});
+    // }
   },
   methods:{
     getValidationClass(fieldName){
@@ -94,30 +91,25 @@ export default {
         this.$v.$reset()
       }
     },
+    ...mapActions('account', ['login']), 
     async onSubmit(){
       // if(this.username != "" && this.password != "") {
           try{    
-              var params = { username: this.form.username,password: this.form.password};
+              const username = this.form.username;
+              const password = this.form.password;
               // var header s = { 'content-type': 'application/json' };
-              var response = await this.$http.post('https://api.test.phoodsolutions.com/auth/login',params);
-              var result = await response.json();
-              console.log(result);
-              
-              if(response.status === 200 && 'authorization' in response.headers.map){
-                //Auth token  
-                var token = response.headers.map.authorization[0];
-                //start session
-                this.$session.start();
-                this.$session.set('token',token);
-                this.$http.headers.common['Authorization'] = 'Basic ' + token;
-                this.$store.commit('addRoles',response.body.roles);
-                this.$store.commit('changeState',true);
-                this.$router.push({path:'/dashboard'});
+              if(username && password){
+                await this.login({username,password});
+                if(this.$store.state.account.isLoggedIn){
+                  this.$router.push({path:'/dashboard'}); 
+                }
               }
+              
           }catch(err){
-            if(err.status == 401){
+            if(err.status === 401){
               swal("Unauthorized","Username or Password is incorrect","error"); 
             }else{
+              console.log(err);
               swal("oops","Please try again later","error");
             }
           }
