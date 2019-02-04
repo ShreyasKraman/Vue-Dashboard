@@ -4,6 +4,7 @@ import VueResource from 'vue-resource';
 Vue.use(VueResource);
 
 import { url } from '../../constants/index';
+import { alertservice } from './alert-service';
 
 
 function getAuthToken(){
@@ -34,78 +35,84 @@ async function apiPost(endpoint, body){
                    'authorization': getAuthToken()
                 }
         })
-
-        if(response.status === 200){
+        if(response.status === 201 || response.status === 200){
             response.success = true;
             return response;
         }else{
             response.success = false;
             return response;
         }
-
-    //return handleResponse(response);
 }
 
-async function apiGet(endpoint, params, http){
+async function apiGet(endpoint, params){
     const apiURL = url + endpoint;
 
-    const response = await new Promise((resolve, reject) => {
-        http.get(apiURL, {
-            params: params,
+    const response = await Vue.http.get(apiURL,{
+            params:params,
+            headers:{
+                'authorization':getAuthToken()
+            }
+    });
+
+    if(response.status === 204 || response.status === 200){
+        response.success = true;
+        return response;
+    }else{
+        response.success = false;
+        return response;
+    }
+}
+
+async function apiPut(endpoint, body){
+    const apiURL = url + endpoint;  
+
+    try{
+
+        const response = await Vue.http.put(apiURL, body, {
             headers: {
                 'authorization': getAuthToken(),
+                'Content-type':'application/json'
+             }
+        });
+
+        if(response.status === 200){
+            response.success = true;
+            return response;
+        }else{
+            response.success = false;
+            response.error = response.body;
+            return response;
+        }
+
+    }catch(error){
+        console.log(error);
+    }
+   
+}
+
+async function apiDelete(endpoint,itemId){
+    const apiURL = url + endpoint;
+
+    try{
+        const response = await Vue.http.delete(apiURL, {
+            params: { id : itemId },
+            headers: {
+                authorization:getAuthToken()
             }
-        })
-            .then((response) => {
-                response.success = true;
-                return resolve(response);
-            })
-            .catch((response) => {
-                response.success = false;
-                return resolve(response);
-            });
-    });
+        });
 
-    return handleResponse(response);
-}
+        if(response.status === 200){
+            response.success = true;
+            return response;
+        }else{
+            response.success = false;
+            response.error = response.body;
+            return response;
+        }
 
-async function apiPut(endpoint, body, http){
-    const apiURL = url + endpoint;
-
-    const response = await new Promise(function(resolve, reject) {
-        http.put(apiURL, body, {headers: {authorization: getAuthToken()} })
-            .then((response) => {
-                response.success = true;
-                return resolve(response);
-            })
-            .catch((response) => {
-                response.success = false;
-                return resolve(response);
-            });
-    });
-
-    return handleResponse(response);    
-}
-
-async function apiDelete(endpoint,query,http){
-    const apiURL = url + endpoint;
-
-    const response = await new Promise((resolve, reject) => {
-        http.delete(apiURL, {
-            params: query,
-            headers: {'authorization': getAuthToken()}
-        })
-            .then((response) => {
-                response.success = true;
-                return resolve(response);
-            })
-            .catch((response) => {
-                response.success = false;
-                return resolve(response);
-            });
-    });
-
-    return handleResponse(response);    
+    }catch(error){
+        console.log(error);
+    }   
 }
 
 export const webApi = {

@@ -27,7 +27,8 @@
                 <span class="md-error" v-if="!$v.form.password.required">Password must not be blank</span>  
               </md-field>
               <!-- <button type="submit" name="login" class="btn btn-primary btn-block">Login</button> -->
-              <md-button class="md-raised md-primary btn-block" type="submit">Login</md-button>
+              <!-- <md-button class="md-raised md-primary btn-block" type="submit">Login</md-button> -->
+              <v-btn color="info" class="btn-block" type="submit">Login</v-btn>
             </form>
           </div>
           <div class="card-footer">
@@ -68,10 +69,7 @@ export default {
     }
   },
   beforeCreate:function(){
-    // if(this.$session.exists()){
-    //   this.$store.signIn.commit('change_logged_in',true);
-    //   this.$router.push({path:'/dashboard'});
-    // }
+    var token = localStorage.getItem('Authorization');
   },
   methods:{
     getValidationClass(fieldName){
@@ -91,20 +89,20 @@ export default {
         this.$v.$reset()
       }
     },
-    ...mapActions('account', ['login']), 
+
+    ...mapActions('account', ['login']),
+
     async onSubmit(){
-      // if(this.username != "" && this.password != "") {
           try{    
               const username = this.form.username;
               const password = this.form.password;
-              // var header s = { 'content-type': 'application/json' };
+              
               if(username && password){
                 await this.login({username,password});
                 if(this.$store.state.account.isLoggedIn){
                   this.$router.push({path:'/dashboard'}); 
                 }
               }
-              
           }catch(err){
             if(err.status === 401){
               swal("Unauthorized","Username or Password is incorrect","error"); 

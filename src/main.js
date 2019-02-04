@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import App from '../src/App.vue'
 import VueResource from 'vue-resource';
-// import VueSession from 'vue-session';
+import VueSession from 'vue-session';
 import Vuelidate from 'vuelidate'
+import Vuetify from 'vuetify'
+import VueScrollTo from 'vue-scrollto';
 
 import { router } from '../src/router/index';
 import { store } from '../src/store/index';
@@ -13,8 +15,11 @@ import { MdField } from 'vue-material/dist/components';
 import { MdTable } from 'vue-material/dist/components';
 import { MdCard } from 'vue-material/dist/components';
 import { MdContent } from 'vue-material/dist/components';
-import 'vue-material/dist/vue-material.min.css'
-import 'vue-material/dist/theme/default.css'
+
+import 'vue-material/dist/vue-material.min.css';
+import 'vue-material/dist/theme/default.css';
+
+import 'vuetify/dist/vuetify.min.css';
 
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -23,8 +28,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 Vue.config.productionTip = false
 
 Vue.use(VueResource);
-// Vue.use(VueSession);
+Vue.use(VueSession);
 Vue.use(Vuelidate);
+Vue.use(Vuetify);
+Vue.use(VueScrollTo);
 
 Vue.use(MdButton);
 Vue.use(MdField);

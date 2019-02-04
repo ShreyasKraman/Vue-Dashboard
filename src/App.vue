@@ -1,10 +1,10 @@
 <template>
-  <div id="app">
+  <v-app id="app">
     <link rel="stylesheet" 
     href="//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons">
     <Header></Header>
     <router-view/>
-  </div>
+  </v-app>
 </template>
 
 <script>
