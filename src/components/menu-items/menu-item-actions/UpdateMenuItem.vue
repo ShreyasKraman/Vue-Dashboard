@@ -1,49 +1,5 @@
 <template>
     <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <v-menu
-                    :close-on-content-click="false"
-                    v-model="menu2"
-                    :nudge-right="40"
-                    lazy
-                    transition="scale-transition"
-                    offset-y
-                    full-width
-                    min-width="290px">
-                    <v-text-field
-                        slot="activator"
-                        v-model="startDate"
-                        label="Picker without buttons"
-                        prepend-icon="event"
-                        readonly>
-                    </v-text-field>
-                    <v-date-picker v-model="startDate" @change="populateTable" @input="menu2 = false"></v-date-picker>
-                </v-menu>
-            </div>
-            <div class="col-md-3">    
-                <v-menu
-                    :close-on-content-click="false"
-                    v-model="menu1"
-                    :nudge-right="40"
-                    lazy
-                    transition="scale-transition"
-                    offset-y
-                    full-width
-                    min-width="290px">
-                    <v-text-field
-                        slot="activator"
-                        v-model="endDate"
-                        label="Picker without buttons"
-                        prepend-icon="event"
-                        readonly>
-                    </v-text-field>
-                    <v-date-picker v-model="endDate" @change="populateTable" @input="menu1 = false"></v-date-picker>
-                </v-menu>
-            </div>
-        </div>
-
-
         <v-dialog v-model="dialog" max-width="500px">
             <v-card>
                 <v-card-title>
@@ -170,12 +126,10 @@ import { mapActions } from 'vuex';
 
 export default {
     name:'updateItems',
+    props:['menuItems','startDate','endDate','load'],
     data(){
         return{
-            startDate:new Date().toISOString().substr(0, 10),
             menu:false,
-            menu2:false,
-            menu1:false,
             dialog:false,
             formTitle:'',
             units:['lbs','kg','oz','gm'],
@@ -184,7 +138,6 @@ export default {
                 numeric: value => !!( !isNaN(value)) || 'Numeric value only',
                 minValue: value => !!(value > 0) || 'Value must be greater than 0' 
             },
-            endDate:new Date().toISOString().substr(0, 10),
             headers:[{
                 text: 'Id',
                 align: 'left',
@@ -210,39 +163,11 @@ export default {
                 station:'',
                 portionCost:0
             },
-            menuItems:[],
             editedIndex:-1,
         }
     },
-    created: async function(){
-        this.populateTable();
-    },
     methods: {
-        ...mapActions('menu', ['getItems','updateItem','deleteItem']),
-
-        async populateTable(){
-            this.menuItems = [];
-            var startDate = this.startDate;
-            var endDate = this.endDate;
-            
-            setTimeout(
-                this.load = true,
-                await this.getItems({startDate,endDate})
-                ,10000)
-
-            var isDataFlag = this.$store.state.menu.isDataPresent;
-
-            if(isDataFlag){
-                var newItems = this.$store.state.menu.menuItems;    
-
-                for(var items of newItems){
-                    if(!this.menuItems.find(x=>x.id == items.id)){
-                        this.menuItems.push(items);
-                    }
-                }
-            }
-            this.load=false;
-        },
+        ...mapActions('menu', ['updateItem','deleteItem']),
 
         editItem (item) {
             this.editedIndex = this.menuItems.indexOf(item)
@@ -258,7 +183,7 @@ export default {
             var deleteFlag = this.$store.state.menu.isDeletedSuccess;
 
             if(deleteFlag)
-                this.populateTable();
+                this.$emit('display');
         },
 
       close () {
@@ -276,7 +201,7 @@ export default {
 
             var updateFlag = this.$store.state.menu.isUpdatedSuccess;
             if(updateFlag)
-                this.populateTable();
+                this.$emit('display');
             
         } else {
           

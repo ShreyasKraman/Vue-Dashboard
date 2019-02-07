@@ -4,7 +4,7 @@ import VueResource from 'vue-resource';
 import VueSession from 'vue-session';
 import Vuelidate from 'vuelidate'
 import Vuetify from 'vuetify'
-import VueScrollTo from 'vue-scrollto';
+import Moment from 'vue-moment';
 
 import { router } from '../src/router/index';
 import { store } from '../src/store/index';
@@ -31,7 +31,7 @@ Vue.use(VueResource);
 Vue.use(VueSession);
 Vue.use(Vuelidate);
 Vue.use(Vuetify);
-Vue.use(VueScrollTo);
+Vue.use(Moment);
 
 Vue.use(MdButton);
 Vue.use(MdField);

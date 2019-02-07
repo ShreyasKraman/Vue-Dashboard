@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h3 class="display-2">Menu Items</h3>
+        <h3 class="display-2">Food Logs</h3>
 
         <div class="row">
             <div class="col-md-6">
@@ -14,8 +14,7 @@
             </div>
         </div>
 
-        <div class="container" v-if="idVisible === 3 || idVisible === 1">
-
+        <div class="container" v-if="idVisible === 1 || idVisible === 3">
             <div class="row">
                 <div class="col-md-3">
                     <v-menu
@@ -34,9 +33,10 @@
                             prepend-icon="event"
                             readonly>
                         </v-text-field>
-                        <v-date-picker v-model="startDate" @change="populateTable" @input="menu2 = false"></v-date-picker>
+                        <v-date-picker v-model="startDate" @change="dateChange" @input="menu2 = false"></v-date-picker>
                     </v-menu>
                 </div>
+
                 <div class="col-md-3">    
                     <v-menu
                         :close-on-content-click="false"
@@ -54,102 +54,113 @@
                             prepend-icon="event"
                             readonly>
                         </v-text-field>
-                        <v-date-picker v-model="endDate" @change="populateTable" @input="menu1 = false"></v-date-picker>
+                        <v-date-picker v-model="endDate" @change="dateChange" @input="menu1 = false"></v-date-picker>
                     </v-menu>
                 </div>
-            </div>
-            
-            <GetMenuItems 
-                v-if="idVisible === 1"
-                v-bind:menu-items="menuItems"
-                v-bind:start-date="startDate"
-                v-bind:end-date="endDate"
-                v-bind:load="load">
-            </GetMenuItems>
 
-            <UpdateMenuItems 
-                v-if="idVisible === 3"
-                @display="populateTable"
-                v-bind:menu-items="menuItems"
-                v-bind:start-date="startDate"
-                v-bind:end-date="endDate"
-                v-bind:load="load">
-            </UpdateMenuItems>
+                <div class="col-md-3">
+                    <v-text-field
+                        solo
+                        label="Filter Location"
+                        prepend-inner-icon="search"
+                        v-model="location"
+                        @change="filter"
+                    ></v-text-field>
+                </div>
+            </div>
+
+            <GetFoodLogs
+                 v-if="idVisible === 1"
+                 @display="populateTable"
+                 v-bind:start-date="startDate"
+                 v-bind:end-date="endDate"
+                 v-bind:load="load"
+                 v-bind:foodlogs="filter">
+            </GetFoodLogs>
+            
+            <DeleteFoodLogs v-if="idVisible === 3"></DeleteFoodLogs>
 
         </div>
 
-        <AddMenuItems v-if="idVisible === 2"></AddMenuItems>
+        <AddFoodLogs v-if="idVisible === 2"></AddFoodLogs>
+
     </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 
-import GetMenuItems from './menu-item-actions/GetMenuItems'
-import AddMenuItems from './menu-item-actions/AddMenuItems'
-import UpdateMenuItems from './menu-item-actions/UpdateMenuItem'
-
+import GetFoodLogs from './food-logs-actions/GetFoodLogs'
+import AddFoodLogs from './food-logs-actions/AddFoodLogs'
 
 export default {
     name:'dashboard',
     components:{
-        GetMenuItems,
-        AddMenuItems,
-        UpdateMenuItems
+        GetFoodLogs,
+        AddFoodLogs
     },
     data(){
         return{
             idVisible:1,
-            startDate:new Date().toISOString().substr(0,10),
-            endDate:new Date().toISOString().substr(0,10),
-            menuItems:[],
-            load:false,
-            menu2:false,
-            menu1:false,
             items:[
                 {
-                    text:'All Items',
+                    text:'Food Logs',
                     id: 1
                 },
                 {
-                    text:'Add Item',
+                    text:'Add Food Log',
                     id: 2
-                },
-                { 
-                    text: 'Update/Delete Item',
-                    id: 3
                 }
-            ]
+            ],
+            location:'',
+            startDate:new Date().toISOString().substr(0, 10),
+            menu2:false,
+            menu1:false,
+            endDate:new Date().toISOString().substr(0, 10),
+            foodlogs:[],
+            load:false,
         }
     },
-    created: function(){
-        this.populateTable()
+    created:async function(){
+        this.populateTable();
+    },
+    computed:{
+        filter(){
+            return this.foodlogs.filter(log => {
+                return log.itemName.toLowerCase().includes(this.location.toLowerCase())
+            })
+        }
     },
     methods:{
         change: function(item){
             this.idVisible = item;
         },
 
-        ...mapActions('menu', ['getItems']),
+        ...mapActions('logs', ['getfoodlogs']),
+
+        dateChange(){
+            this.populateTable();
+        },
 
         async populateTable(){
-            this.menuItems = [];
+
+            this.foodlogs = [];
             var startDate = this.startDate;
             var endDate = this.endDate;
             
             setTimeout(
                 this.load = true,
-                await this.getItems({startDate,endDate})
+                await this.getfoodlogs({startDate,endDate})
                 ,10000)
 
-            var isDataFlag = this.$store.state.menu.isDataPresent;
+            var isDataFlag = this.$store.state.logs.isDataPresent;
 
             if(isDataFlag){
-                var newItems = this.$store.state.menu.menuItems;    
+                var newItems = this.$store.state.logs.foodLogs;    
 
                 for(var items of newItems){
-                    if(!this.menuItems.find(x=>x.id == items.id)){
-                        this.menuItems.push(items);
+                    if(!this.foodlogs.find(x=>x.id == items.id)){
+                        this.foodlogs.push(items);
                     }
                 }
             }

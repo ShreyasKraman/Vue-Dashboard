@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a href="#" class="navbar-brand"><img src="../assets/logo.png" width="40" height="40"><img src="../assets/Phood_Logo.png" width="150" height="50" alt=""></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -14,7 +14,19 @@
         <span class="navbar-item" v-if="authenticated">
             <a class="nav-link" @click="signout()">Logout</a>
         </span>
-    </nav>   
+    </nav>    -->
+
+<v-toolbar>
+    <img src="../assets/logo.png" width="40" height="40">
+    <img src="../assets/Phood_Logo.png" width="150" height="50" alt="">
+    <v-spacer></v-spacer>
+    <v-toolbar-items class="hidden-sm-and-down" v-if="authenticated">
+      <v-btn flat to="/menu-items">Menu Items</v-btn>
+      <v-btn flat to="/food-logs">Food Logs</v-btn>
+      <v-btn flat @click="signout()">Logout</v-btn>
+    </v-toolbar-items>
+  </v-toolbar>
+
 </template>
 
 <script>

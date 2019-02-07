@@ -4,27 +4,10 @@ import VueResource from 'vue-resource';
 Vue.use(VueResource);
 
 import { url } from '../../constants/index';
-import { alertservice } from './alert-service';
 
 
 function getAuthToken(){
     return localStorage.getItem('Authorization');
-}
-
-function handleResponse(httpResponse) {
-    /*
-    HttpResponse contains the following properties:
-        success, status, statusText, data, config(the request object), and headers(method for retrieving header data).
-     */
-
-        // Handle special cases
-    if (httpResponse.status === 304) {
-        httpResponse.success = true;
-    } else if (httpResponse.status === 401) {
-        // Log out user.
-            
-    }
-    return httpResponse;
 }
 
 async function apiPost(endpoint, body){
@@ -90,12 +73,12 @@ async function apiPut(endpoint, body){
    
 }
 
-async function apiDelete(endpoint,itemId){
+async function apiDelete(endpoint,Id){
     const apiURL = url + endpoint;
 
     try{
         const response = await Vue.http.delete(apiURL, {
-            params: { id : itemId },
+            params: { id : Id },
             headers: {
                 authorization:getAuthToken()
             }

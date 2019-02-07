@@ -1,16 +1,9 @@
 import {webApi} from './web-api-service';
-
-function getLocationId(roles){
-    for (let role of roles) {
-        if (role.roleName === 'ManageLocation' && role.entityType === 'Location') {
-            return role.locationEntityId;
-        }
-    }
-}
+import {helperfunction} from './helper-functions';
 
 async function getItems(startDate, endDate, roles) {
 
-    var locationId = getLocationId(roles);
+    var locationId = helperfunction.getLocationId(roles);
     var params = {
         locationId: locationId,
         startDate: startDate,
@@ -19,6 +12,8 @@ async function getItems(startDate, endDate, roles) {
 
     try {
         var response = await webApi.apiGet('/menuItems/getLocationMenu', params);
+
+        
 
         if (response.success) {
             if (response.bodyText != '') {
@@ -41,7 +36,7 @@ async function getItems(startDate, endDate, roles) {
 }
 
 async function addItem(item,roles){
-    var locationId = getLocationId(roles);
+    var locationId = helperfunction.getLocationId(roles);
 
     item.locationId = locationId;
 

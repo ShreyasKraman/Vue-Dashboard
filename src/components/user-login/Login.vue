@@ -68,16 +68,16 @@ export default {
       }
     }
   },
-  beforeCreate:function(){
-    var token = localStorage.getItem('Authorization');
-  },
   methods:{
     getValidationClass(fieldName){
-      const field = this.$v.form[fieldName]
 
-      if(field){
-        return{
-          'md-invalid': field.$invalid && field.$dirty
+      if(fieldName.length){
+        const field = this.$v.form[fieldName]
+
+        if(field){  
+          return{
+            'md-invalid': field.$invalid && field.$dirty
+          }
         }
       }
     },
@@ -100,7 +100,7 @@ export default {
               if(username && password){
                 await this.login({username,password});
                 if(this.$store.state.account.isLoggedIn){
-                  this.$router.push({path:'/dashboard'}); 
+                  this.$router.push({path:'/menu-items'}); 
                 }
               }
           }catch(err){
