@@ -2,41 +2,37 @@
   <div class="container-fluid mt-5">
      <div clas="row"> 
        <div class="col-md-5 mx-auto">
-        <div class="card"> 
-          <div class="card-header">
-            <h2 class="text-center card-title">Login</h2>
-          </div> 
-          <div class="card-body">
-            <form @submit.prevent="validateInput">
-              <md-field :class="getValidationClass('username')">
-                <label for="emailAddress">Username</label>
-                <md-input 
-                  type="text" 
-                  id="emailAddress" 
-                  v-model="form.username">
-                </md-input>
-                <span class="md-error" v-if="!$v.form.username.required">Username must not be blank</span>
-              </md-field>
-              <md-field :class="getValidationClass('password')">
-                <label for="passwordEnter">Password</label>
-                <md-input 
-                  type="password" 
-                  id="passwordEnter" 
-                  v-model="form.password">
-                </md-input>
-                <span class="md-error" v-if="!$v.form.password.required">Password must not be blank</span>  
-              </md-field>
-              <!-- <button type="submit" name="login" class="btn btn-primary btn-block">Login</button> -->
-              <!-- <md-button class="md-raised md-primary btn-block" type="submit">Login</md-button> -->
-              <v-btn color="info" class="btn-block" type="submit">Login</v-btn>
+        <v-card> 
+          <v-card-title primary-title>
+            <h3 class="headline mb-0 center">Login</h3>
+          </v-card-title> 
+          <v-card-text>
+            <form @submit.prevent="onSubmit">
+              <v-text-field
+                v-model="form.username"
+                :rules="rulesRequired"
+                label="Username"
+                id="username"
+                name="username"
+                outline>
+              </v-text-field>
+              <v-text-field
+                :append-icon="show ? 'visibility_off' : 'visibility'"
+                v-model="form.password"
+                :type="show ? 'text' : 'password'"
+                :rules="rulesRequired"
+                label="Password"
+                name="password"
+                id="password"
+                @click:append="show = !show"
+                outline>
+              </v-text-field>
+              <v-card-actions>
+                <v-btn color="info" class="btn-block" type="submit" @click="onSubmit()">Login</v-btn>
+              </v-card-actions>
             </form>
-          </div>
-          <div class="card-footer">
-            <p class="text-muted text-center ">Not a member yet? 
-              <router-link :to="{path: '/register'}">Register here</router-link>
-            </p>
-          </div>
-        </div>
+          </v-card-text>
+        </v-card>
        </div>
      </div>
   </div>
@@ -44,7 +40,6 @@
 
 <script>
 import swal from 'sweetalert';
-import { required } from 'vuelidate/lib/validators';
 import { mapActions } from 'vuex';
 
 
@@ -55,41 +50,24 @@ export default {
       form:{
         username:'',
         password:''
+      },
+      show:false,
+      password:'Password',
+      rules:{
+        required: value => !!value || 'Required.',
+        email: value => {
+            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            return pattern.test(value) || 'Invalid e-mail.'
+          }
       }
     }
   },
-  validations: {
-    form:{
-      username: {
-        required
-      },
-      password: {
-        required
-      }
+  computed:{
+    rulesRequired(){
+      return [this.rules.required]
     }
   },
   methods:{
-    getValidationClass(fieldName){
-
-      if(fieldName.length){
-        const field = this.$v.form[fieldName]
-
-        if(field){  
-          return{
-            'md-invalid': field.$invalid && field.$dirty
-          }
-        }
-      }
-    },
-    validateInput(){
-      this.$v.$touch()
-      
-      if (!this.$v.$invalid) {
-        this.onSubmit()
-        this.$v.$reset()
-      }
-    },
-
     ...mapActions('account', ['login']),
 
     async onSubmit(){
@@ -102,6 +80,7 @@ export default {
                 if(this.$store.state.account.isLoggedIn){
                   this.$router.push({path:'/menu-items'}); 
                 }
+                swal("Hey","Just testing","success");
               }
           }catch(err){
             if(err.status === 401){
